@@ -27,12 +27,12 @@ def generate_vigenere_square(alphabet):
     return square
 
 
+# Функция для шифрования текста методом Виженера
 def vigenere_encrypt(text, key, vigenere_square):
     encrypted_text = ""
     key_index = 0
     for char in text:
         if char.isalpha():  # Проверка, является ли символ буквой
-            shift = ord('А') if char.isupper() else ord('а')  # Определение сдвига для текущего символа
             key_char = key[key_index % len(key)].upper()  # Получение символа ключа (циклически)
             # Находим индекс строки и столбца для текущего символа и символа ключа в квадрате Виженера
             row_index = (ord(char.upper()) - ord('А')) % 32
@@ -66,7 +66,7 @@ def vigenere_decrypt(text, key, vigenere_square):
 
 # Функция для генерации русского алфавита.
 def generate_russian_alphabet():
-    russian_alphabet = ''.join([chr(i) for i in range(ord('А'), ord('а') + 32)])
+    russian_alphabet = ''.join([chr(i) for i in range(ord('А'), ord('А') + 32)])
     return russian_alphabet
 
 

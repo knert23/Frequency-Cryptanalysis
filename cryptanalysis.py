@@ -36,7 +36,10 @@ def get_vigenere_key_length(ciphertext, max_key_length=20):
         for i, char in enumerate(ciphertext):
             groups[i % key_length] += char
         indices_of_coincidence = [get_index_of_coincidence(group) for group in groups]  # Вычисляем индексы совпадений для каждой группы
+        print("Длина ключа: {0}".format(key_length))
+        print("ic: {0}".format(indices_of_coincidence))
         average_ic.append(sum(indices_of_coincidence) / len(indices_of_coincidence))  # Усредняем индексы совпадений
+        print("average_ic: {0}".format(sum(indices_of_coincidence) / len(indices_of_coincidence)))
     for ic in average_ic:
         if ic > 0.05:
             return average_ic.index(ic) + 1 # Определяем длину ключа как индекс с первым наибольшим значением индекса совпадений
@@ -88,27 +91,25 @@ def find_vigenere_key(ciphertext, key_length):
 # Построение алфавита замены
 def build_substitution_alphabet(keyword):
     # Создаем пустой алфавит замены
-    substitution_alphabet = {}
+    substitution_alphabet = []
 
     # Строим алфавит замены
-    for i, char in enumerate(keyword):
+    for char in keyword:
         alphabet = [chr((j - ord('а') + ord(char)) % 32 + ord('а')) for j in range(32)]
-        substitution_alphabet[char] = alphabet
+        substitution_alphabet.append(alphabet)
 
     return substitution_alphabet
 
 
 # Расшифровка шифра Виженера
-def decrypt_vigenere(ciphertext, keyword):
-    substitution_alphabet = build_substitution_alphabet(keyword)
+def decrypt_vigenere(ciphertext, keyword, substitution_alphabet):
     plaintext = ''
     keyword_length = len(keyword)
     keyword_index = 0  # Индекс для символов ключевого слова
 
-    # Дешифруем текст с помощью квадрата виженера
+    # Дешифруем текст с помощью алфавита замены
     for char in ciphertext:
-        keyword_char = keyword[keyword_index % keyword_length]
-        vigenere_column = substitution_alphabet[keyword_char]
+        vigenere_column = substitution_alphabet[keyword_index % keyword_length]
         vigenere_row_index = vigenere_column.index(char)
         plaintext += chr(ord('а') + vigenere_row_index)
         keyword_index += 1
@@ -192,11 +193,11 @@ def main():
 
         substitution_alphabet = build_substitution_alphabet(keyword)
         # Выводим алфавит замены
-        for key, value in substitution_alphabet.items():
-            print(f"{key}: {' '.join(value)}")
+        for value in substitution_alphabet:
+            print(f"{' '.join(value)}")
 
         # Расшифровка
-        plain_text = decrypt_vigenere(encrypted_text_vigenere, keyword)
+        plain_text = decrypt_vigenere(encrypted_text_vigenere, keyword, substitution_alphabet)
         print(plain_text)
 
         #################### Частотный анализ ####################
